@@ -35,6 +35,9 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 
 /**
+ * This rule enforces that specific dependencies and/or plugins have the same version.
+ * <p>
+ * See <a href="http://maven.apache.org/enforcer/enforcer-rules/requireSameVersions.html">Require Same Versions</a>.
  * 
  * @author Robert Scholte
  * @since 1.3
@@ -42,15 +45,15 @@ import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluatio
 public class RequireSameVersions
     extends AbstractNonCacheableEnforcerRule
 {
-    private boolean uniqueVersions;
+    boolean uniqueVersions;
 
-    private Set<String> dependencies = new HashSet<String>();
+    Set<String> dependencies = new HashSet<String>();
 
-    private Set<String> plugins = new HashSet<String>();
+    Set<String> plugins = new HashSet<String>();
 
-    private Set<String> buildPlugins = new HashSet<String>();
+    Set<String> buildPlugins = new HashSet<String>();
 
-    private Set<String> reportPlugins = new HashSet<String>();
+    Set<String> reportPlugins = new HashSet<String>();
 
     public void execute( EnforcerRuleHelper helper )
         throws EnforcerRuleException
@@ -74,7 +77,7 @@ public class RequireSameVersions
         Set<String> reportPluginSet = new HashSet<String>( reportPlugins );
         reportPluginSet.addAll( plugins );
 
-        versionMembers.putAll( collectVersionMembers( project.getArtifacts(), dependencies, " (dependency)" ) );
+        versionMembers.putAll(collectVersionMembers(project.getDependencyArtifacts(), dependencies, " (dependency)"));
         versionMembers.putAll( collectVersionMembers( project.getPluginArtifacts(), buildPlugins, " (buildPlugin)" ) );
         versionMembers.putAll( collectVersionMembers( project.getReportArtifacts(), reportPlugins, " (reportPlugin)" ) );
 
